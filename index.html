@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GDG JIST · Study Jam Tracker</title>
+<meta name="description" content="Study Jam progress tracker for GDG JIST learners.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head><body class="ldg">
+<div id="ld" role="status"><div><div class="ldr"><svg width="170" height="170" viewBox="0 0 170 170"><circle cx="85" cy="85" r="78" fill="none" stroke="#242424" stroke-width="8"/><circle id="arc" cx="85" cy="85" r="78" fill="none" stroke="#b9f95a" stroke-width="8" stroke-linecap="round"/></svg><div id="pc">0%</div></div><p id="qt"></p></div></div>
+<div class="app" id="top">
+<header class="top"><a class="logo" href="#top" aria-label="GDG JIST"><img src="logo-gdg.webp" alt="GDG JIST logo" onerror="this.parentNode.classList.add('ph');this.remove()"><i>GDG</i></a>
+<nav class="pills"><a class="pill on" href="#top">Overview</a><a class="pill" href="#people">Learners</a></nav>
+<button class="round" id="sb" aria-label="Search" data-i="search"></button>
+<div class="who"><b>GDG JIST</b><small><i class="live"></i>Study Jam · updated daily</small></div></header>
+<div class="ttl"><h1>Study Jam</h1><div class="sels">
+<label class="sel">Badge:<select id="fg"><option value="all">All</option><option value="gear">GEAR earned</option><option value="no">Not yet</option></select></label>
+<label class="sel">Code:<select id="fc"><option value="all">All</option><option value="red">Redeemed</option><option value="pend">Pending</option></select></label>
+<label class="sel">Sort:<select id="so"><option value="name">A to Z</option><option value="badges">Skill badges</option><option value="gear">GEAR first</option></select></label></div></div>
+<div class="lay"><aside class="side"><button class="round" id="s1" aria-label="Overview" data-i="home"></button><button class="round" id="s2" aria-label="Learners" data-i="users"></button><button class="round" id="s3" aria-label="Compact list" data-i="list"></button><button class="round" id="s4" aria-label="Back to top" data-i="up"></button></aside>
+<main><div class="dash"><div class="c k1" id="k1"></div><div class="c k2" id="k2"></div><div class="c dm" id="dm"></div><div class="c tl" id="tl"></div></div>
+<section id="people"><div class="sh"><h2>Find your progress</h2><label class="srch"><span data-i="search"></span><input id="q" placeholder="Search your name…" autocomplete="off"></label></div>
+<div class="cnt" id="cnt"></div><div class="grid" id="grid"></div></section></main></div>
+<footer><span>Source: Google confirmation list · <b id="asof">01 Nov 2026</b></span><span>GDG JIST</span></footer>
+</div>
+<script src="script.js"></script>
+</body></html>
