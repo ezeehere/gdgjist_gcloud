@@ -12,25 +12,29 @@ requestAnimationFrame(tick)}requestAnimationFrame(tick)})();
 /* ---------- App ---------- */
 const API_URL="https://script.google.com/macros/s/AKfycby0vjx7Jxeyk6t5B52Ha1d3fXXuKoQ-ckhiPeo7s0KOTW4AvrUpAZXtbN3jo72DhDMZ/exec";/* Apps Script JSON endpoint returning {status:"success",updated:"…",data:[…]} */
 const TIMEOUT_MS=8000;
-let D=[],q="",fg="all",fc="all",so="name";
+const LABS=10;let D=[],q="",fg="all",fc="all",so="name",fl="all";
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const IC={home:'<path d="M3 11 12 4l9 7v9H3z"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-4 3.4-6 6.5-6s5.7 2 6.5 6M16 5.5a3.2 3.2 0 0 1 0 6M18 14.5c2 .7 3.2 2.5 3.5 5.5"/>',list:'<path d="M4 6h16M4 12h16M4 18h10"/>',up:'<path d="M12 19V5M5 12l7-7 7 7"/>',search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'};
 document.querySelectorAll("[data-i]").forEach(e=>e.innerHTML=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[e.dataset.i]}</svg>`);
 const ini=n=>n.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase(),pct=(a,b)=>b?Math.round(a/b*100):0;
+const done=x=>x.c>=LABS;
 const cls=x=>x.r?"w":x.gear?"l":"o";
 function stats(){const t=D.length,g=D.filter(x=>x.gear).length,r=D.filter(x=>x.r).length,sd=D.filter(x=>x.c>0).length,ms=D.filter(x=>!/^no milestone/i.test(x.m)).length;
 const two=(a,al,b,bl)=>`<div class="two"><div><i class="tri"></i><b>${a}</b><small>${al}</small></div><div><i class="tri dn"></i><b>${b}</b><small>${bl}</small></div></div>`;
 $("#k1").innerHTML="<h3>Learners</h3>"+two(g,"GEAR badge",t-g,"Not yet");
 $("#k2").innerHTML="<h3>Access codes</h3>"+two(r,"Redeemed",t-r,"Pending");
+const ld=D.filter(done).length;
+$("#dm").innerHTML=`<h3>All ${LABS} labs</h3><div class="lb"><button type="button" class="lbb l" data-fl="done"><b>${ld}</b><small>Completed all ${LABS} labs</small></button><button type="button" class="lbb o" data-fl="not"><b>${t-ld}</b><small>Not completed</small></button><button type="button" class="lbb" data-fl="all"><b>${t}</b><small>Show everyone</small></button></div>`;
 const st=[["Confirmed",t,"l"],["GEAR badge earned",g,"o"],["Code redeemed",r,"w"],["Skill badges started",sd,"l"],["Milestone reached",ms,"o"]];
 setTimeout(()=>document.querySelectorAll("[data-w]").forEach(e=>e.style.width=e.dataset.w+"%"),200)}
-function list(){let L=D.filter(x=>x.n.toLowerCase().includes(q)&&(fg=="all"||(fg=="gear")==x.gear)&&(fc=="all"||(fc=="red")==x.r));
+function list(){let L=D.filter(x=>x.n.toLowerCase().includes(q)&&(fg=="all"||(fg=="gear")==x.gear)&&(fc=="all"||(fc=="red")==x.r)&&(fl=="all"||(fl=="done")==done(x)));
+document.querySelectorAll(".lbb").forEach(b=>b.classList.toggle("on",b.dataset.fl===fl));
 L.sort((a,b)=>so=="badges"?b.c-a.c||a.n.localeCompare(b.n):so=="gear"?(b.gear-a.gear)||a.n.localeCompare(b.n):a.n.localeCompare(b.n));
 $("#cnt").textContent=`Showing ${L.length} of ${D.length}`;
 $("#grid").innerHTML=L.length?L.map(x=>`<article class="cd"><div class="hd"><div class="av ${cls(x)}">${esc(ini(x.n))}</div><div><div class="nm">${esc(x.n)}</div><div class="ix">#${String(D.indexOf(x)+1).padStart(2,"0")}</div></div></div>
-<div class="pls"><span class="p2 ${x.gear?"l":"o"}">${x.gear?"GEAR badge earned":"No GEAR badge"}</span><span class="p2 ${x.r?"w":""}">${x.r?"Code redeemed":"Code pending"}</span></div>
+<div class="pls"><span class="p2 ${x.gear?"l":"o"}">${x.gear?"GEAR badge earned":"No GEAR badge"}</span><span class="p2 ${x.r?"w":""}">${x.r?"Code redeemed":"Code pending"}</span><span class="p2 ${done(x)?"l":"o"}">${done(x)?"All labs completed":"Labs not completed"}</span></div>
 <div class="mt"><div><small>Milestone</small><b>${esc(x.m)}</b></div><div><small>Skill badges</small><b>${x.c}</b></div><div><small>Skills profile</small><b>${esc(x.sp)}</b></div><div><small>Developer profile</small><b>${esc(x.dp)}</b></div></div>
-<div class="seg">${Array.from({length:8},(_,i)=>`<i class="${i<x.c?"on":""}"></i>`).join("")}</div>
+<div class="seg">${Array.from({length:LABS},(_,i)=>`<i class="${i<x.c?"on":""}"></i>`).join("")}</div>
 ${x.b.length?`<details><summary>${x.c} skill badge${x.c>1?"s":""}</summary><ul>${x.b.map(b=>`<li>${esc(b)}</li>`).join("")}</ul></details>`:""}
 <div class="lk">${x.su?`<a href="${esc(x.su)}" target="_blank" rel="noopener">Skills profile ↗</a>`:""}${x.du?`<a href="${esc(x.du)}" target="_blank" rel="noopener">Developer ↗</a>`:""}</div></article>`).join(""):`<div class="empty">No learners match that search.</div>`}
 function init(){stats();list()}
@@ -67,6 +71,7 @@ $("#fg").onchange=e=>{fg=e.target.value;if(D.length)list()};$("#fc").onchange=e=
 $("#sb").onclick=()=>{go("#people");setTimeout(()=>$("#q").focus({preventScroll:true}),500)};
 $("#s1").onclick=$("#s4").onclick=()=>scrollTo({top:0,behavior:"smooth"});$("#s2").onclick=()=>go("#people");$("#s3").onclick=()=>$("#people").classList.toggle("cp");
 $("#dm").onclick=e=>{const d=e.target.closest(".d[data-n]");if(!d)return;$("#q").value=d.dataset.n;q=d.dataset.n.toLowerCase();list();go("#people")};
+$("#dm").addEventListener("click",e=>{const b=e.target.closest(".lbb");if(!b)return;fl=(fl===b.dataset.fl&&fl!=="all")?"all":b.dataset.fl;list();go("#people")});
 $("#grid").onclick=e=>{if(e.target.id==="retry"){showLoading();load()}};
 
 load();
